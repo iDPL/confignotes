@@ -22,6 +22,7 @@ net.ipv4.tcp_rmem| 4096 87380 4194304 |4096 65536 134217728 | max TCP window siz
 net.ipv4.tcp_wmem| 4096 16384 4194304|4096 65536 134217728 |  max TCP window size to 128MB |
 
 Possible iptables config
+```
 # IDPLPOOL Chain. Accept ssh, and non-privileged packets
 -N IDPLPOOL
 -A IDPLPOOL -p tcp --dport 1024:65535 --source 67.58.50.6 -j ACCEPT
@@ -39,4 +40,5 @@ Possible iptables config
 
 # After all standard accept
 -A INPUT -j IDPLPOOL
+```
 
