@@ -23,22 +23,23 @@ net.ipv4.tcp_wmem| 4096 16384 4194304|4096 65536 134217728 |  max TCP window siz
 
 Possible iptables config
 ```
-# IDPLPOOL Chain. Accept ssh, and non-privileged packets
+# Two Chains. 1) a list of hosts 2) a list of ports
 -N IDPLPOOL
--A IDPLPOOL -p tcp --dport 1024:65535 --source 67.58.50.6 -j ACCEPT
--A IDPLPOOL -p tcp --dport ssh --source 67.58.50.6 -j ACCEPT
--A IDPLPOOL -p tcp --dport 1024:65535 --source 67.58.50.61 -j ACCEPT
--A IDPLPOOL -p tcp --dport ssh --source 67.58.50.61 -j ACCEPT
--A IDPLPOOL -p tcp --dport 1024:65535 --source 115.25.138.244 -j ACCEPT
--A IDPLPOOL -p tcp --dport ssh --source 115.25.138.244 -j ACCEPT
--A IDPLPOOL -p tcp --dport 1024:65535 --source 137.110.119.113 -j ACCEPT
--A IDPLPOOL -p tcp --dport ssh --source 128.104.100.67 -j ACCEPT
--A IDPLPOOL -p tcp --dport 1024:65535 --source 128.104.100.67 -j ACCEPT
--A IDPLPOOL -p tcp --dport ssh --source 137.110.119.113 -j ACCEPT
--A IDPLPOOL -p tcp --dport 1024:65535 --source 159.226.15.235 -j ACCEPT
--A IDPLPOOL -p tcp --dport ssh --source 159.226.15.235 -j ACCEPT
+-N IDPLPORTS
+-A IDPLPOOL  --source 67.58.50.6 -j IDPLPORTS
+-A IDPLPOOL  --source 67.58.50.61 -j IDPLPORTS
+-A IDPLPOOL  --source 115.25.138.244 -j IDPLPORTS
+-A IDPLPOOL  --source 128.104.100.67  -j IDPLPORTS
+-A IDPLPOOL  --source 137.110.119.113 -j IDPLPORTS
+-A IDPLPOOL  --source 159.226.15.235  -j IDPLPORTS
 
-# After all standard accept
+
+# Drop NFS.  Allow ssh. Allow non-privileged ports
+-A IDPLPORTS -p tcp  --dport nfs -j DROP
+-A IDPLPORTS -p tcp  --dport ssh -j ACCEPT
+-A IDPLPORTS -p tcp  --dport 1024:65535 -j ACCEPT
+
+# Right before you first ACCEPT Rule (or another appropriate place) on the INPUT firewall chain
 -A INPUT -j IDPLPOOL
 ```
 
