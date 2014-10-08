@@ -21,3 +21,22 @@ net.core.wmem_max| 124928 | 268435456 |  256MB for large Bandwidth-Delay-Product
 net.ipv4.tcp_rmem| 4096 87380 4194304 |4096 65536 134217728 | max TCP window size to 128MB |
 net.ipv4.tcp_wmem| 4096 16384 4194304|4096 65536 134217728 |  max TCP window size to 128MB |
 
+Possible iptables config
+# IDPLPOOL Chain. Accept ssh, and non-privileged packets
+-N IDPLPOOL
+-A IDPLPOOL -p tcp --dport 1024:65535 --source 67.58.50.6 -j ACCEPT
+-A IDPLPOOL -p tcp --dport ssh --source 67.58.50.6 -j ACCEPT
+-A IDPLPOOL -p tcp --dport 1024:65535 --source 67.58.50.61 -j ACCEPT
+-A IDPLPOOL -p tcp --dport ssh --source 67.58.50.61 -j ACCEPT
+-A IDPLPOOL -p tcp --dport 1024:65535 --source 115.25.138.244 -j ACCEPT
+-A IDPLPOOL -p tcp --dport ssh --source 115.25.138.244 -j ACCEPT
+-A IDPLPOOL -p tcp --dport 1024:65535 --source 137.110.119.113 -j ACCEPT
+-A IDPLPOOL -p tcp --dport ssh --source 128.104.100.67 -j ACCEPT
+-A IDPLPOOL -p tcp --dport 1024:65535 --source 128.104.100.67 -j ACCEPT
+-A IDPLPOOL -p tcp --dport ssh --source 137.110.119.113 -j ACCEPT
+-A IDPLPOOL -p tcp --dport 1024:65535 --source 159.226.15.235 -j ACCEPT
+-A IDPLPOOL -p tcp --dport ssh --source 159.226.15.235 -j ACCEPT
+
+# After all standard accept
+-A INPUT -j IDPLPOOL
+
